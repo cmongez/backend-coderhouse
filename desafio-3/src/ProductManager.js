@@ -10,7 +10,7 @@ class ProductManager {
     if (fileExists(this.path)) {
       try {
         let products = await fs.promises.readFile(this.path, 'utf-8');
-        return JSON.parse(products);
+        return products.length > 0 ? JSON.parse(products) : [];
       } catch (error) {
         console.log(error);
         return [];
@@ -38,9 +38,13 @@ class ProductManager {
         if (codeExists) {
           throw Error('El code de ese producto ya existe');
         }
+        if (products.length > 0) {
+          let newId = (await products[products.length - 1].id) + 1;
+          prod.id = newId;
+        } else {
+          prod.id = this.count + 1;
+        }
 
-        let newId = (await products[products.length - 1].id) + 1;
-        prod.id = newId;
         products.push(prod);
         await fs.promises.writeFile(
           this.path,
@@ -92,7 +96,7 @@ class ProductManager {
           JSON.stringify(newProducts, null, 2)
         );
         console.log('Producto eliminado.');
-        return;
+        return id;
       } catch (error) {
         console.log('Error al borrar el producto');
       }
@@ -105,25 +109,23 @@ class ProductManager {
       let products = await this.getProducts();
       let prodIndex = products.findIndex((item) => item.id === id);
 
-      console.log('ss', Object.keys(data).length), Object.keys(data);
       if (prodIndex !== -1) {
-        let product = products[prodIndex];
+        products[prodIndex] = {
+          title: data.title,
+          description: data.description,
+          price: data.price,
+          thumbnail: data.thumbnail,
+          code: data.code,
+          stock: data.stock,
+          id: id,
+        };
 
-        if (Object.keys(data).length > 1) {
-          product = data;
-          console.log('aqui', data);
-        } else {
-          let property = Object.keys(data)[0];
-          let value = Object.values(data)[0];
-          console.log(property, value);
-          product[property] = value;
-        }
-
+        let update = products[prodIndex];
         await fs.promises.writeFile(
           this.path,
           JSON.stringify(products, null, 2)
         );
-        return product;
+        return update;
       }
       throw Error('Not Found');
     } else {
@@ -146,28 +148,31 @@ const instance = new ProductManager('products.txt');
 
 (async () => {
   let products = await instance.getProducts();
+  // console.log('products :>> ', products);
   // let product = await instance.addProduct({
+  //   title: 'producto prueba',
+  //   description: 'Este es un producto prueba',
+  //   price: 200,
+  //   thumbnail: 'Sin imagen',
+  //   code: 'abc123',
+  //   stock: 25,
+  // });
+  // console.log('product', product);
+  console.log('products :>> ', products);
+
+  // let deleted = await instance.deleteById(1);
+  // console.log(deleted);
+
+  // console.log('getProductById(1)', await instance.getProductById(3));
+  // console.log(
+  //   'update(1)',
+  //   await instance.updateProduct(2, {
   //     title: 'producto prueba',
   //     description: 'Este es un producto prueba',
   //     price: 200,
   //     thumbnail: 'Sin imagen',
   //     code: 'abc123',
   //     stock: 25,
-  // });
-  // console.log('product', product);
-  // let deleted = await instance.deleteById(1);
-  // console.log(deleted);
-
-  // console.log('getProductById(1)', await instance.getProductById(3));
-  // console.log(
-  //     'update(1)',
-  //     await instance.updateProduct(2, {
-  //         title: 'cesar',
-  //         description: ' es un producto prueba',
-  //         price: 400,
-  //         thumbnail: 'Sin imagen',
-  //         code: 'abc12',
-  //         stock: 25,
-  //     })
+  //   })
   // );
 })();
