@@ -1,4 +1,4 @@
-const fs = require('fs');
+import fs from 'fs';
 
 class ProductManager {
   constructor(path) {
@@ -7,7 +7,7 @@ class ProductManager {
     this.count = 0;
   }
   async getProducts() {
-    if (fileExists(this.path)) {
+    if (this.fileExists(this.path)) {
       try {
         let products = await fs.promises.readFile(this.path, 'utf-8');
         return products.length > 0 ? JSON.parse(products) : [];
@@ -21,7 +21,7 @@ class ProductManager {
   }
 
   async addProduct(prod) {
-    if (fileExists(this.path)) {
+    if (this.fileExists(this.path)) {
       try {
         for (const property in prod) {
           if (prod[property] === '') {
@@ -42,7 +42,7 @@ class ProductManager {
           let newId = (await products[products.length - 1].id) + 1;
           prod.id = newId;
         } else {
-          prod.id = this.count + 1;
+          prod.id = 1;
         }
 
         products.push(prod);
@@ -70,109 +70,129 @@ class ProductManager {
 
   async getProductById(id) {
     try {
-      if (fileExists(this.path)) {
+      if (this.fileExists(this.path)) {
         let products = await this.getProducts();
-        let prod = products.find((item) => item.id === id);
-
+        let prod = products.find((item) => item.id == id);
         if (prod !== undefined) {
           return prod;
         }
         throw Error('Not Found');
       } else {
         throw Error('Not Found');
+        return id;
       }
     } catch (error) {
+      console.log(`Error al obtener el producto con el id: ${id} `);
+
       console.error(error);
+      return { msg: 'El producto que buscas no existe.' };
     }
   }
 
   async deleteById(id) {
-    if (fileExists(this.path)) {
+    if (this.fileExists(this.path)) {
       try {
         let products = await this.getProducts();
-        let newProducts = products.filter((item) => item.id !== id);
-        await fs.promises.writeFile(
-          this.path,
-          JSON.stringify(newProducts, null, 2)
-        );
-        console.log('Producto eliminado.');
-        return id;
+
+        const productExists = products.some((item) => item.id === id);
+        if (productExists) {
+          let newProducts = products.filter((item) => item.id !== id);
+          await fs.promises.writeFile(
+            this.path,
+            JSON.stringify(newProducts, null, 2)
+          );
+          console.log(`Producto ${id} eliminado.`);
+          return id;
+        }
+        console.log(productExists);
+        throw Error(`El producto con el id ${id} no existe.`);
       } catch (error) {
         console.log('Error al borrar el producto');
+        console.error(error);
+        return id;
       }
     }
     console.log('No existe un archivo donde buscar.');
+    return id;
   }
 
   async updateProduct(id, data) {
-    if (fileExists(this.path)) {
-      let products = await this.getProducts();
-      let prodIndex = products.findIndex((item) => item.id === id);
+    if (this.fileExists(this.path)) {
+      try {
+        let products = await this.getProducts();
+        let prodIndex = products.findIndex((item) => item.id === id);
 
-      if (prodIndex !== -1) {
-        products[prodIndex] = {
-          title: data.title,
-          description: data.description,
-          price: data.price,
-          thumbnail: data.thumbnail,
-          code: data.code,
-          stock: data.stock,
-          id: id,
-        };
+        if (prodIndex !== -1) {
+          products[prodIndex] = {
+            title: data.title,
+            description: data.description,
+            price: data.price,
+            thumbnail: data.thumbnail,
+            code: data.code,
+            stock: data.stock,
+            id: id,
+          };
 
-        let update = products[prodIndex];
-        await fs.promises.writeFile(
-          this.path,
-          JSON.stringify(products, null, 2)
-        );
-        return update;
+          let update = products[prodIndex];
+          await fs.promises.writeFile(
+            this.path,
+            JSON.stringify(products, null, 2)
+          );
+          return update;
+        }
+        throw Error('Not Found');
+      } catch (error) {
+        console.log(`Error al actualizar el producto con el id: ${id}`);
+        console.error(error);
+        return id;
       }
-      throw Error('Not Found');
-    } else {
-      throw Error('No existe un archivo donde buscar.');
+    }
+    console.log('No existe un archivo donde buscar.');
+    return id;
+  }
+
+  //helpers
+
+  //Verifica si el archivo existe
+  fileExists(path) {
+    try {
+      return fs.statSync(path).isFile();
+    } catch (err) {
+      return false;
     }
   }
 }
-//helpers
 
-//Verifica si el archivo existe
-const fileExists = (path) => {
-  try {
-    return fs.statSync(path).isFile();
-  } catch (err) {
-    return false;
-  }
-};
+export default ProductManager;
 
-const instance = new ProductManager('products.txt');
+// const instance = new ProductManager('products.txt');
 
-(async () => {
-  let products = await instance.getProducts();
-  // console.log('products :>> ', products);
-  // let product = await instance.addProduct({
-  //   title: 'producto prueba',
-  //   description: 'Este es un producto prueba',
-  //   price: 200,
-  //   thumbnail: 'Sin imagen',
-  //   code: 'abc123',
-  //   stock: 25,
-  // });
-  // console.log('product', product);
-  console.log('products :>> ', products);
+// (async () => {
+//   let products = await instance.getProducts();
+//   console.log('products :>> ', products);
+//   let product = await instance.addProduct({
+//     title: 'producto prueba',
+//     description: 'Este es un producto prueba',
+//     price: 200,
+//     thumbnail: 'Sin imagen',
+//     code: 'ac12',
+//     stock: 25,
+//   });
+//   console.log('product', product);
 
-  // let deleted = await instance.deleteById(1);
-  // console.log(deleted);
+//   let deleted = await instance.deleteById(3);
+//   console.log(deleted);
+//   console.log('products :>> ', products);
 
-  // console.log('getProductById(1)', await instance.getProductById(3));
-  // console.log(
-  //   'update(1)',
-  //   await instance.updateProduct(2, {
-  //     title: 'producto prueba',
-  //     description: 'Este es un producto prueba',
-  //     price: 200,
-  //     thumbnail: 'Sin imagen',
-  //     code: 'abc123',
-  //     stock: 25,
-  //   })
-  // );
-})();
+//   console.log('getProductById(1)', await instance.getProductById(4));
+//   let update = await instance.updateProduct(3, {
+//     title: 'producto prueba',
+//     description: 'Este es un producto prueba',
+//     price: 200,
+//     thumbnail: 'Sin imagen',
+//     code: 'ac12',
+//     stock: 25,
+//   });
+
+//   console.log(update);
+// })();
