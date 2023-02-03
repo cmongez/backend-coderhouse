@@ -3,10 +3,11 @@
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
+    "type": "module",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "dev": "nodemon ProductManager.js",
-        "start": "node ProductManager.js"
+        "dev": "nodemon src/app.js",
+        "start": "node app.js"
     },
     "keywords": [],
     "author": "",
