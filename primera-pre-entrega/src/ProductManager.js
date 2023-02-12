@@ -3,8 +3,6 @@ import fs from 'fs';
 class ProductManager {
   constructor(path) {
     this.path = path;
-    this.products = [];
-    this.count = 0;
   }
   async getProducts() {
     if (this.fileExists(this.path)) {
@@ -23,17 +21,6 @@ class ProductManager {
   async addProduct(prod) {
     if (this.fileExists(this.path)) {
       try {
-        let {
-          title,
-          description,
-          code,
-          price,
-          status,
-          stock,
-          category,
-          thumbnails,
-        } = prod;
-
         for (const property in prod) {
           if (prod[property] === '') {
             throw Error(`Campo ${property} vacio`);
