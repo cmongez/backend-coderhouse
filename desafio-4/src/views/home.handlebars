@@ -1,8 +1,10 @@
-<div class="container">
-    <a href="/realTimeProducts">Real time products</a>
+<div class="container-fluid">
+    <a href="/realtimeproducts"><button class="btn btn-primary">Real time products</button></a>
     <h1>Home</h1>
     <h2>Productos</h2>
-   <table class="table table-striped table-primary">
+{{#if products.length}}
+
+<table class="table table-striped table-primary">
     <thead>
         <tr>
         <th >#id</th>
@@ -13,7 +15,6 @@
         <th >code</th>
         <th >stock</th>
         <th >status</th>
-        <th >price</th>
         </tr>
     </thead>
     {{#each products}}
@@ -27,12 +28,16 @@
         <th >{{code}}</th>
         <th >{{stock}}</th>
         <th >{{status}}</th>
-        <th >{{price}}</th>
         </tr>
         
     </tbody>
 {{/each}}
 </table>
+   {{else}}
+
+  <h2>No se encontraron productos</h2>
+{{/if}}
 </div>
 
-</div>
+
+

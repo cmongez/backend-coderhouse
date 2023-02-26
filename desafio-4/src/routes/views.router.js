@@ -8,16 +8,14 @@ const productManager = new ProductManager(
   path.join(__dirname, 'productos.json')
 );
 
-// router.get('/', (req, res) => {
-//   res.render('index');
-// });
-
 router.get('', async (req, res) => {
-  console.log('entre');
-
   const products = await productManager.getProducts();
-  console.log(products);
   res.render('home', { products });
+});
+
+router.get('/realtimeproducts', async (req, res) => {
+  const products = await productManager.getProducts();
+  res.render('realTimeProducts', { products });
 });
 
 export default router;

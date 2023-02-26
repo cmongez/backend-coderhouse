@@ -5,6 +5,13 @@ import __dirname from './utils.js';
 import { Server } from 'socket.io';
 import viewsRouter from './routes/views.router.js';
 import handlebars from 'express-handlebars';
+import path from 'path';
+
+import ProductManager from './ProductManager.js';
+
+const productsSocket = new ProductManager(
+  path.join(__dirname, 'productos.json')
+);
 
 const app = express();
 
@@ -26,20 +33,23 @@ app.use('/api/carts', cartsRouter);
 
 const server = app.listen(8080, () => console.log('Listening on 8080'));
 
-const io = new Server(server);
+export const io = new Server(server);
+io.on('connection', async (socket) => {
+  io.emit('mesagge');
+  console.log('Server levantado con socket"');
 
-io.on('connection', (socket) => {
-  console.log('Nuevo cliente');
+  socket.on('addProduct', async (product) => {
+    console.log('Nuevo-producto', product);
 
-  socket.on('message', (data) => console.log(data));
+    const newProductId = await productsSocket.addProduct(product);
+    const newProduct = await productsSocket.getProductById(newProductId);
 
-  socket.emit(
-    'evento_socket-individual',
-    'Este mensaje solo lo debe recibir el socket individual'
-  );
-  socket.broadcast.emit(
-    'evento_todos_menos_actual',
-    'Lo veran todos menos el que envio el mensaje'
-  );
-  io.emit('evento_todos', 'Lo recibiran todos los sockets');
+    io.emit('productAdded', newProduct);
+  });
+  socket.on('deleteProductById', async (id) => {
+    console.log(id);
+    const idDeleted = await productsSocket.deleteProductById(id);
+
+    io.emit('productDeleted', idDeleted);
+  });
 });
