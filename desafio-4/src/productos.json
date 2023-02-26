@@ -41,7 +41,7 @@
     "thumbnail": [
       "https://cdn-icons-png.flaticon.com/512/1088/1088537.png"
     ],
-    "code": "abc123456",
+    "code": "abc12356",
     "stock": 25,
     "status": true,
     "id": 4
@@ -53,7 +53,7 @@
     "thumbnail": [
       "https://cdn-icons-png.flaticon.com/512/1088/1088537.png"
     ],
-    "code": "abc1234567",
+    "code": "ab1234567",
     "stock": 25,
     "status": true,
     "id": 5
@@ -63,7 +63,7 @@
     "description": "Este es un producto prueba",
     "price": 400,
     "thumbnail": [],
-    "code": "abc12345678",
+    "code": "abc123458",
     "stock": 25,
     "status": true,
     "id": 6
@@ -73,7 +73,7 @@
     "description": "Este es un producto prueba",
     "price": 400,
     "thumbnail": [],
-    "code": "abc123456789",
+    "code": "abc123789",
     "stock": 25,
     "status": true,
     "id": 7
@@ -83,7 +83,7 @@
     "description": "Este es un producto prueba",
     "price": 400,
     "thumbnail": [],
-    "code": "abc12345678910",
+    "code": "abc1234560",
     "stock": 25,
     "status": false,
     "id": 8
@@ -93,7 +93,7 @@
     "description": "Este es un producto prueba",
     "price": 400,
     "thumbnail": [],
-    "code": "abc1234567891011",
+    "code": "abc011",
     "stock": 25,
     "status": false,
     "id": 9
@@ -103,33 +103,10 @@
     "description": "Este es un producto prueba",
     "price": 400,
     "thumbnail": [],
-    "code": "abc123456789101112",
+    "code": "ab01112",
     "stock": 25,
     "status": false,
     "id": 10
-  },
-  {
-    "title": "Producto prueba 11",
-    "description": "Este es un producto prueba",
-    "price": 500,
-    "thumbnail": [
-      "https://cdn-icons-png.flaticon.com/512/1088/1088537.png"
-    ],
-    "code": "abc1239",
-    "stock": 25,
-    "status": true,
-    "id": 11
-  },
-  {
-    "title": "Producto prueba 11",
-    "description": "Este es un producto prueba",
-    "price": 500,
-    "thumbnail": [
-      "https://cdn-icons-png.flaticon.com/512/1088/1088537.png"
-    ],
-    "code": "abssc1239",
-    "stock": 25,
-    "status": true,
-    "id": 12
   }
+
 ]
