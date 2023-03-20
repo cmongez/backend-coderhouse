@@ -36,7 +36,7 @@ const server = app.listen(8080, () => console.log('Listening on 8080'));
 export const io = new Server(server);
 io.on('connection', async (socket) => {
   io.emit('mesagge');
-  console.log('Server levantado con socket"');
+  console.log('Server levantado con sockets');
 
   socket.on('addProduct', async (product) => {
     console.log('Nuevo-producto', product);
