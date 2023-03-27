@@ -1,7 +1,7 @@
 <div class='container'>
   <h1>Lista de productos </h1>
   <div class="row">
-    {{#each products}}
+    {{#each payload}}
       <div class="card col-4">
         <div class="card-body">
           <h5 class="card-title">{{this.title}}</h5>
@@ -19,11 +19,11 @@
     {{/each}}
   </div>
   <div class='d-flex justify-content-center'>
-    {{#if products.hasPrevPage}}
+    {{#if hasPrevPage}}
       <button type='button' onClick='prevPage()' class='btn btn-primary m-3'>&lt;Prev</button>
     {{/if}}
     <span class='lead mx-3' id='page'>{{page}}</span>
-    {{#if products.hasNextPage}}
+    {{#if hasNextPage}}
       <button type='button' onClick='nextPage()' class='btn btn-primary m-3'>Next &#62;</button>
     {{/if}}
   </div>
