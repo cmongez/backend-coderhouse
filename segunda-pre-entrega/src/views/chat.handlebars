@@ -1,0 +1,35 @@
+<div class="container">
+    <div>
+        <div>
+            <h2>Chat room</h2>
+            <div id="messages" class="p-3" style="height: 500px; border: 1px solid blue; border-radius: 20px; overflow: auto">
+                <i>Chat vacio..</i>
+            </div>
+        </div>
+        <div>
+            <form class="py-2" id="sendMessage">
+                <div class="mb-3">
+                    <div class="row">
+                        <label for="user" class="col-2 col-form-label">Email *</label>
+                        <div class="col-10">
+                            <input required type="text" class="form-control col-9" id="user" name="user">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="row">
+                        <label for="message" class="col-2 col-form-label">Message *</label>
+                        <div class="col-10">
+                            <input required type="text" class="form-control" id="message" name="message">
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" value="Send" class="btn btn-primary">Send</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/chat.js"></script>
