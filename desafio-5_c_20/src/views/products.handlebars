@@ -1,0 +1,31 @@
+<div class='container'>
+  <h1>Lista de productos </h1>
+  <div class="row">
+    {{#each payload}}
+      <div class="card col-4">
+        <div class="card-body">
+          <h5 class="card-title">{{this.title}}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">Category: {{this.category}}</h6>
+          <p class="card-text">Description:{{this.description}}</p>
+          <p class="card-text">Code: {{this.code}}</p>
+          <p class="card-text">Price: {{this.price}}</p>
+          <p class="card-text">Stock: {{this.stock}}</p>
+          <div class="btn-group">
+            <a href='/products/{{this.id}}' class='btn btn-info'>Ver mas</a>
+            <button class='btn btn-dark addProduct' onClick='buttonAdd(this)' type='button' pid='{{this.id}}'><i class='bi bi-cart-plus-fill'>Añadir</i></button>
+          </div>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+  <div class='d-flex justify-content-center'>
+    {{#if hasPrevPage}}
+      <button type='button' onClick='prevPage()' class='btn btn-primary m-3'>&lt;Prev</button>
+    {{/if}}
+    <span class='lead mx-3' id='page'>{{page}}</span>
+    {{#if hasNextPage}}
+      <button type='button' onClick='nextPage()' class='btn btn-primary m-3'>Next &#62;</button>
+    {{/if}}
+  </div>
+  <script src='./js/main.js'></script>
+</div>
