@@ -2,7 +2,9 @@ import { productModel } from '../../models/product.model.js';
 
 class ProductManager {
   async getProducts(filter = {}, sort = '', limit = 0, page = 0) {
-    let query = productModel.find(filter);
+    try {
+      
+      let query = productModel.find(filter);
 
     if (sort) {
       const sortOption = {};
@@ -40,28 +42,52 @@ class ProductManager {
       };
     }
 
+    } catch (error) {
+      console.error('Error in getProducts:', err);
+      throw err;
+    }
     return await query;
   }
 
   async getProductById(id) {
-    return await productModel.findById(id);
+    try {
+      return await productModel.findById(id);
+    } catch (err) {
+      console.error('Error in getProductById:', err);
+      throw err;
+    }
   }
 
   async addProduct(data) {
-    const existingProduct = await productModel.findOne({ code: data.code });
-    if (existingProduct) {
-      throw new Error(`El producto con el código ${data.code} ya existe`);
+    try {
+      const existingProduct = await productModel.findOne({ code: data.code });
+      if (existingProduct) {
+        throw new Error(`El producto con el código ${data.code} ya existe`);
+      }
+      return await productModel.create(data);
+    } catch (err) {
+      console.error('Error in addProduct:', err);
+      throw err;
     }
-    return await productModel.create(data);
   }
 
   async updateProduct(id, data) {
-    return await productModel.findByIdAndUpdate(id, data, { new: true });
+    try {
+      return await productModel.findByIdAndUpdate(id, data, { new: true });
+    } catch (err) {
+      console.error('Error in updateProduct:', err);
+      throw err;
+    }
   }
 
   async deleteProductById(id) {
-    return await productModel.findByIdAndDelete(id);
+    try {
+      return await productModel.findByIdAndDelete(id);
+    } catch (err) {
+      console.error('Error in deleteProductById:', err);
+      throw err;
+    }
   }
-}
+  }
 
 export default ProductManager;
