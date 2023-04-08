@@ -4,14 +4,14 @@ class ProductManager {
   async getProducts(filter = {}, sort = '', limit = 0, page = 0) {
     try {
       
-      let query = productModel.find(filter);
-
+    let query = productModel.find(filter);
+    // Ordenamiento
     if (sort) {
       const sortOption = {};
       sortOption[sort] = 1;
       query = query.sort(sortOption);
     }
-
+    // Paginación
     if (limit && page) {
       const startIndex = (page - 1) * limit;
       const endIndex = page * limit;
@@ -31,6 +31,7 @@ class ProductManager {
         : null;
 
       return {
+        status: 'success',
         payload: await query,
         hasPrevPage,
         hasNextPage,
@@ -41,12 +42,15 @@ class ProductManager {
         page: parseInt(page),
       };
     }
+    return {
+      status: 'success',
+      payload: await query,
+    };
 
     } catch (error) {
       console.error('Error in getProducts:', err);
       throw err;
     }
-    return await query;
   }
 
   async getProductById(id) {

@@ -11,7 +11,7 @@ class CartsManager {
 
   async getCartById(id) {
     try {
-      return await cartModel.findById(id).populate('products.id');
+      return await cartModel.findById(id).populate('products.product');
     } catch (error) {
       throw new Error(`Error getting cart: ${error.message}`);
     }
@@ -19,10 +19,12 @@ class CartsManager {
 
   async addProductToCart(cid, pid) {
     try {
-      return await cartModel.findOneAndUpdate(
+
+      const resp = await cartModel.findOneAndUpdate(
         { _id: cid },
-        { $push: { products: { id: pid } } }
+        { $push: { products: { product: pid, quantity: 1 } } }
       );
+      return resp
     } catch (error) {
       throw new Error(`Error adding product to cart: ${error.message}`);
     }
@@ -31,8 +33,8 @@ class CartsManager {
   async updateProductQuantity(cid, pid, quantity) {
     try {
       return await cartModel.findOneAndUpdate(
-        { _id: cid, 'products.id': pid },
-        { $set: { 'products.$.cantidad': quantity } },
+        { _id: cid, 'products.product': pid },
+        { $set: { 'products.$.quantity': quantity } },
         { new: true }
       );
     } catch (error) {
@@ -56,7 +58,7 @@ class CartsManager {
     try {
       return await cartModel.findOneAndUpdate(
         { _id: cid },
-        { $pull: { products: { id: pid } } },
+        { $pull: { products: { product: pid } } },
         { new: true }
       );
     } catch (error) {

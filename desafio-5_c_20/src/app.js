@@ -55,7 +55,7 @@ app.use('/', viewsRouter);
 
 //Endpoints api
 app.use('/api/products', productsRouter);
-app.use('/api/cart', cartsRouter);
+app.use('/api/carts', cartsRouter);
 
 const server = app.listen(8080, () => console.log('Listening on 8080'));
 
