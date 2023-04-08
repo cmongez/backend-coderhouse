@@ -19,10 +19,13 @@ class CartsManager {
 
   async addProductToCart(cid, pid) {
     try {
-      return await cartModel.findOneAndUpdate(
+
+      const resp = await cartModel.findOneAndUpdate(
         { _id: cid },
-        { $push: { products: { id: pid } } }
+        { $push: { products: { id: pid, quantity: 1 } } }
       );
+      console.log('resp',resp)
+      return resp
     } catch (error) {
       throw new Error(`Error adding product to cart: ${error.message}`);
     }
@@ -32,7 +35,7 @@ class CartsManager {
     try {
       return await cartModel.findOneAndUpdate(
         { _id: cid, 'products.id': pid },
-        { $set: { 'products.$.cantidad': quantity } },
+        { $set: { 'products.$.quantity': quantity } },
         { new: true }
       );
     } catch (error) {

@@ -1,10 +1,8 @@
 import { Router } from 'express';
 import __dirname from '../../utils.js';
-// import ProductManager from '../daos/fileManager/ProductManager.js';
-// import CartsManager from '../daos/fileManager/CartsManager.js';
+
 import ProductManager from '../../daos/dbManager/products.dao.js';
 import CartsManager from '../../daos/dbManager/carts.dao.js';
-import path from 'path';
 
 const router = Router();
 
@@ -16,7 +14,9 @@ const productManager = new ProductManager();
 //POST: Agrega un nuevo carrito.
 
 router.post('/', async (req, res) => {
+  console.log('entre')
   const id = await cartsManager.createCart();
+  console.log(id)
   res.json(id);
 });
 
@@ -42,7 +42,8 @@ router.put('/:cid', async (req, res) => {
 //Ruta /carts/:cid/product/:pid
 //POST: Agregar producto al carrito por id.
 
-router.post('/:cid/product/:pid', async (req, res) => {
+router.post('/:cid/products/:pid', async (req, res) => {
+  console.log('aaaaaaaaaaa')
   const { cid, pid } = req.params;
   const product = await productManager.getProductById(pid);
   if (product.id) {
