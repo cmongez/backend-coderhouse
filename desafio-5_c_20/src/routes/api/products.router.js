@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
     filter.tipo = query;
   }
   try {
-    const result = await productManager.getFilteredProducts(
+    const result = await productManager.getProducts(
       filter,
       sort,
       parseInt(limit),
