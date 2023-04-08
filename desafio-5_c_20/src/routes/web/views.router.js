@@ -17,9 +17,7 @@ router.get('/products', async (req, res) => {
   if (status) {
     filter.status = status;
   }
-  const cartId = localStorage.getItem('cartId');
 
-console.log('cartId', cartId)
   try {
     const products = await productManager.getProducts(
       filter,
@@ -28,8 +26,6 @@ console.log('cartId', cartId)
       page
     );
     console.log(products);
-    const cartId = localStorage.getItem('cartId');
-    console.log(cartId)
     res.render('products', products);
   } catch (error) {
     res.status(500).json({ status: 'error', message: error.message });
