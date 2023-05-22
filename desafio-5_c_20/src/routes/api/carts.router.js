@@ -54,10 +54,8 @@ router.post('/:cid/products/:pid', async (req, res) => {
 // PUT: Actualizar SÓLO la cantidad de ejemplares del producto.
 
 router.put('/:cid/products/:pid', async (req, res) => {
-
   const { cid, pid } = req.params;
   const { quantity } = req.body;
-  console.log(cid,pid,quantity )
   const cart = await cartsManager.updateProductQuantity(cid, pid, quantity);
   res.json(cart);
 });

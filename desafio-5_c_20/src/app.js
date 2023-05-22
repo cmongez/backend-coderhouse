@@ -1,43 +1,50 @@
 import express from 'express';
+import session from 'express-session';
 import productsRouter from './routes/api/products.router.js';
 import cartsRouter from './routes/api/carts.router.js';
 import __dirname from './utils.js';
-import { Server } from 'socket.io';
 import viewsRouter from './routes/web/views.router.js';
+import sessionsRouter from './routes/web/sessions.router.js';
 import handlebars from 'express-handlebars';
 import Handlebars from 'handlebars';
+import MongoStore from 'connect-mongo';
 
 import path from 'path';
 import mongoose from 'mongoose';
-import ProductManager from './daos/dbManager/products.dao.js';
-import MessageManager from './daos/dbManager/messages.dao.js';
-import { allowInsecurePrototypeAccess } from '@handlebars/allow-prototype-access';
 
-// const productsSocket = new ProductManager(
-//   path.join(__dirname, 'productos.json')
-// );
-// const productsSocket = new ProductManager();
-// const messageManager = new MessageManager();
+import { allowInsecurePrototypeAccess } from '@handlebars/allow-prototype-access';
 
 const app = express();
 
 //MongoDB
 mongoose.set('strictQuery', true);
 
-mongoose
-  .connect(
+try {
+  await mongoose.connect(
     'mongodb+srv://cmongez:fzA2poG0aZM3NXdQ@ecommerce.t8ifwej.mongodb.net/test'
-  )
-  .then(() => {
-    console.log('Connected to MongoDB');
-  })
-  .catch((err) => {
-    console.error('Error connecting to MongoDB: ', err);
-  });
-app.use(express.static(`${__dirname}/public`));
+  );
+} catch (error) {
+  console.log(error);
+}
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(`${__dirname}/public`));
+
+//Session
+app.use(
+  session({
+    store: MongoStore.create({
+      mongoUrl:
+        'mongodb+srv://cmongez:fzA2poG0aZM3NXdQ@ecommerce.t8ifwej.mongodb.net/test',
+      mongoOptions: { useNewUrlParser: true },
+      ttl: 3600,
+    }),
+    secret: 'secretCoder',
+    resave: true,
+    saveUninitialized: true,
+  })
+);
 
 //Handlebars
 app.engine(
@@ -56,31 +63,6 @@ app.use('/', viewsRouter);
 //Endpoints api
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
+app.use('/api/sessions', sessionsRouter);
 
 const server = app.listen(8080, () => console.log('Listening on 8080'));
-
-// export const io = new Server(server);
-// io.on('connection', async (socket) => {
-//   io.emit('mesagge');
-//   console.log('Server levantado con sockets');
-
-//   socket.emit('messages', await messageManager.getAll());
-//   socket.on('new_msg', async (data) => {
-//     await messageManager.save(data);
-//     io.sockets.emit('messages', await messageManager.getAll());
-//   });
-
-//   socket.on('addProduct', async (product) => {
-//     const newProductId = await productsSocket.addProduct(product);
-
-//     const newProduct = await productsSocket.getProductById(newProductId);
-//     console.log('newProduct IDDD :>> ', newProduct);
-//     io.emit('productAdded', newProduct);
-//   });
-//   socket.on('deleteProductById', async (id) => {
-//     console.log(id);
-//     const idDeleted = await productsSocket.deleteProductById(id);
-//     console.log('idDeleted  :>> ', idDeleted._id.toString());
-//     io.emit('productDeleted', idDeleted._id.toString());
-//   });
-// });
